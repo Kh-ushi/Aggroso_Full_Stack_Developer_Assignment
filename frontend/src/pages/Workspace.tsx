@@ -136,12 +136,12 @@ const Workspace = () => {
   };
 
   const handleToggle = (id) =>
-    setItems((prev) => prev.map((item) => (item.id === id ? { ...item, done: !item.done } : item)));
+    setItems((prev) => prev.map((item) => (item._id === id ? { ...item, status: item.status === "done" ? "open" : "done" } : item)));
 
-  const handleDelete = (id) => setItems((prev) => prev.filter((item) => item.id !== id));
+  const handleDelete = (id) => setItems((prev) => prev.filter((item) => item._id !== id));
 
   const handleEdit = (id, changes) =>
-    setItems((prev) => prev.map((item) => (item.id === id ? { ...item, ...changes } : item)));
+    setItems((prev) => prev.map((item) => (item._id === id ? { ...item, ...changes } : item)));
 
   const handleSelectHistory = (entry) => {
 
@@ -161,8 +161,8 @@ const Workspace = () => {
 
 
   const filtered = items.filter((item) => {
-    if (filter === "open") return !item.done;
-    if (filter === "done") return item.done;
+    if (filter === "open") return item.status === "open";
+    if (filter === "done") return item.status === "done";
     return true;
   });
 
@@ -238,7 +238,7 @@ const Workspace = () => {
             )}
             {filtered.map((item) => (
               <ActionItemCard
-                key={item.id}
+                key={item._id}
                 item={item}
                 onToggle={handleToggle}
                 onDelete={handleDelete}

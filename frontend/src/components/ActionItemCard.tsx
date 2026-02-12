@@ -1,5 +1,6 @@
 import { Check, Pencil, Trash2, X } from "lucide-react";
 import { useState } from "react";
+import axios from "axios";
 
 const ActionItemCard = ({ item, onToggle, onDelete, onEdit }) => {
   console.log("Item",item);
@@ -11,22 +12,34 @@ const ActionItemCard = ({ item, onToggle, onDelete, onEdit }) => {
     setEditing(false);
   };
 
+  const handleToggle = async () => {
+   try{
+   const response=await axios.patch(`${import.meta.env.VITE_BACKEND_URL}/actions/${item._id}/status`, {
+      status: item.status === "done" ? "open" : "done",
+    });
+    onToggle(item._id);
+   }
+   catch(error){
+    console.error("Error toggling status:", error);
+   }
+  }
+
   return (
     <div
       className={`group animate-fade-in rounded-lg border border-border bg-card p-4 transition-all hover:border-primary/30 hover:glow-primary ${
-        item.done ? "opacity-60" : ""
+        item.status === "done" ? "opacity-60" : ""
       }`}
     >
       <div className="flex items-start gap-3">
         <button
-          onClick={() => onToggle(item.id)}
+          onClick={handleToggle}
           className={`mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-md border transition-colors ${
-            item.done
+            item.status === "done"
               ? "border-primary bg-primary text-primary-foreground"
               : "border-border hover:border-primary/50"
           }`}
         >
-          {item.done && <Check className="h-3 w-3" />}
+          {item.status === "done" && <Check className="h-3 w-3" />}
         </button>
         <div className="min-w-0 flex-1">
           {editing ? (
@@ -45,7 +58,7 @@ const ActionItemCard = ({ item, onToggle, onDelete, onEdit }) => {
               </button>
             </div>
           ) : (
-            <p className={`text-sm font-medium ${item.done ? "line-through text-muted-foreground" : "text-foreground"}`}>
+            <p className={`text-sm font-medium ${item.status === "done" ? "line-through text-muted-foreground" : "text-foreground"}`}>
               {item.task}
             </p>
           )}

@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { Server, Database, Brain } from "lucide-react";
+import axios from "axios";
 
 const services = [
   { key: "backend", label: "Backend API", icon: Server, healthyLabel: "Healthy", errorLabel: "Down" },
@@ -7,27 +8,24 @@ const services = [
   { key: "llm", label: "LLM Service", icon: Brain, healthyLabel: "Connected", errorLabel: "Error" },
 ];
 
-const mockCheck = () =>
-  new Promise((resolve) =>
-    setTimeout(() => {
-      resolve({
-        backend: Math.random() > 0.15,
-        database: Math.random() > 0.1,
-        llm: Math.random() > 0.2,
-      });
-    }, 600)
-  );
-
 const Status = () => {
   const [statuses, setStatuses] = useState(null);
   const [checking, setChecking] = useState(true);
 
-  const check = () => {
+
+  const check = async () => {
     setChecking(true);
-    mockCheck().then((result) => {
-      setStatuses(result);
-      setChecking(false);
-    });
+    try{
+
+    const response = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/status`);
+    console.log("Status response:", response.data);
+    setStatuses(response.data);
+    setChecking(false);
+  }
+  catch(error){
+    console.error("Error checking status:", error);
+    setChecking(false);
+  }
   };
 
   useEffect(() => { check(); }, []);
