@@ -1,12 +1,10 @@
 const express = require('express');
 const router = express.Router();
+const mongoose = require("mongoose");
 
-router.get("/", async (req, res) => {
-    res.json({
-        backend: "ok",
-        database: "connected", //TODO-- implement actual database connection check
-        llm: "ok" //TODO-- implement actual LLM connection check
-    });
-});
+const { getHealthStatus } = require("../controllers/status.controller");
+
+router.get("/", getHealthStatus);
 
 module.exports = router;
+

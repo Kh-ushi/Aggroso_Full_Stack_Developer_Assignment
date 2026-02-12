@@ -1,0 +1,29 @@
+const mongoose = require("mongoose");
+const { healthCheck } = require("../services/llm/gemini.service");
+
+const getHealthStatus = async (req, res) => {
+    const backendStatus = "ok";
+    const dbStatus =
+        mongoose.connection.readyState === 1
+            ? "connected"
+            : "disconnected";
+
+    let llmStatus = "unknown";
+
+    try {
+        const llmHealthy = await healthCheck();
+        llmStatus = llmHealthy ? "ok" : "error";
+    } catch (error) {
+        llmStatus = "error";
+    }
+
+    res.status(200).json({
+        backend: backendStatus,
+        database: dbStatus,
+        llm: llmStatus,
+    });
+};
+
+module.exports = {
+    getHealthStatus,
+};

@@ -23,25 +23,27 @@ exports.generateActionItemsWithGemini = async (transcriptText) => {
             throw new ApiError(400, "Transcript too short for extraction");
         }
 
-        const contents = [
-            {
-                role: "system",
-                content: SYSTEM_PROMPT,
-            }, {
-                role: "user", content: `Extract action items from the following meeting transcript:\n\n${transcriptText}`,
-            }
-        ]
-
-        const result = await model.generateContent({
-            contents,
+        const response = await model.generateContent({
+            systemInstruction: {
+                parts: [{ text: SYSTEM_PROMPT }]
+            },
+            contents: [
+                {
+                    role: "user",
+                    parts: [
+                        {
+                            text: `Extract action items from the following meeting transcript:\n\n${transcriptText}`
+                        }
+                    ]
+                }
+            ],
             generationConfig: {
                 temperature: 0.2,
+                responseMimeType: "application/json"
             }
-        }
-        );
+        });
 
-        const response = await result.response;
-        let rawText= response.text().trim();
+        let rawText = response.response.text().trim();
 
         rawText = rawText.replace(/```json|```/g, "").trim();
 
@@ -70,13 +72,39 @@ exports.generateActionItemsWithGemini = async (transcriptText) => {
                         : null,
             }))
             .filter((item) => item.task.length > 0);
-       
-            return cleaned;
+
+        return cleaned;
     }
     catch (error) {
         if (error instanceof ApiError) throw error;
 
         console.error("Gemini extraction error:", error.message);
         throw new ApiError(500, "Failed to extract action items using Gemini");
+    }
+};
+
+exports.healthCheck = async () => {
+    try {
+        const result = await model.generateContent({
+            contents: [
+                {
+                    role: "user",
+                    parts: [{ text: "Reply with the word OK only." }]
+                }
+            ],
+            generationConfig: {
+                temperature: 0,
+                maxOutputTokens: 5,
+            },
+        });
+
+        const response = await result.response;
+        const text = response.text().trim();
+
+        return text.length > 0;
+    }
+    catch (error) {
+        console.error("Gemini health check failed:", error.message);
+        return false;
     }
 }
