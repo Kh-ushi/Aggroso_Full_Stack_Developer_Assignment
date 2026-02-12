@@ -4,21 +4,18 @@ const cors = require('cors');
 const errorHandler = require('./middleware/errorHandler');
 const statusRoutes = require('./routes/status.routes');
 const transcriptRoutes = require('./routes/transcript.routes');
+const actionRoutes = require('./routes/action.routes');
 
-const app= express();
+
+const app = express();
 
 app.use(cors());
 
 app.use(express.json());
 
 app.use("/api/status", statusRoutes);
-
-app.get("/", (req, res) => {
-  res.json({ message: "Meeting Workspace API running" });
-});
-
 app.use("/api/transcripts", transcriptRoutes);
-
+app.use("/api/actions", actionRoutes);
 
 app.use(errorHandler);
 

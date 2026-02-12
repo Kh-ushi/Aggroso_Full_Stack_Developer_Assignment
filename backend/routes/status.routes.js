@@ -4,7 +4,8 @@ const router = express.Router();
 router.get("/", async (req, res) => {
     res.json({
         backend: "ok",
-        database: "connected" //TODO-- implement actual database connection check
+        database: "connected", //TODO-- implement actual database connection check
+        llm: "ok" //TODO-- implement actual LLM connection check
     });
 });
 
