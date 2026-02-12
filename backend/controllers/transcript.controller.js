@@ -4,9 +4,11 @@ const ApiError = require("../utils/ApiError");
 const ActionItem = require("../models/ActionItem");
 const mongoose = require("mongoose");
 
+const generateActionItemsWithGemini = require("../services/llm/gemini.service").generateActionItemsWithGemini;
+
 exports.createTranscript = async (req, res, next) => {
     try {
-        const { text } = req.body;
+        const { text, provider } = req.body;
 
         if (!text || typeof text !== "string" || text.trim().length === 0) {
             throw new ApiError(400, "Transcript text cannot be empty");
@@ -20,12 +22,21 @@ exports.createTranscript = async (req, res, next) => {
             text: text.trim(),
         });
 
+        const extractedItems = await generateActionItemsWithGemini(transcript.text, provider || "gemini");
+
+        const savedItems = extractedItems.map((item) => ({
+            transcriptId: transcript._id,
+            ...item,
+        }))
+
+        await ActionItem.insertMany(savedItems);
+
         res.status(201).json({
             success: true,
             data: {
                 transcriptId: transcript._id,
                 text: transcript.text,
-                actionItems: [],
+                actionItems: savedItems,
             },
         });
 
