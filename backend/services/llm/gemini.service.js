@@ -1,4 +1,4 @@
-const { GoogleGenerativeAI } = require("@google-ai/generative-ai");
+const { GoogleGenerativeAI } = require("@google/generative-ai");
 const ApiError = require("../../utils/ApiError");
 const { SYSTEM_PROMPT } = require("./prompts");
 

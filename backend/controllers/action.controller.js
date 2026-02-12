@@ -2,6 +2,16 @@ const mongoose = require("mongoose");
 
 const ActionItem = require("../models/ActionItem");
 
+exports.getActionItems = async (req, res, next) => {
+    try {
+        const actionItems = await ActionItem.find().sort({ createdAt: -1 });
+        res.status(200).json({ success: true, data: actionItems })
+    }
+    catch (error) {
+        next(error);
+    }
+}
+
 exports.updateActionItem = async (req, res, next) => {
     try {
 
@@ -65,55 +75,55 @@ exports.toggleStatus = async (req, res, next) => {
 
 
 exports.deleteActionItem = async (req, res, next) => {
-  try {
-    const { id } = req.params;
+    try {
+        const { id } = req.params;
 
-    if (!mongoose.Types.ObjectId.isValid(id)) {
-      throw new ApiError(400, "Invalid action item ID");
+        if (!mongoose.Types.ObjectId.isValid(id)) {
+            throw new ApiError(400, "Invalid action item ID");
+        }
+
+        const actionItem = await ActionItem.findByIdAndDelete(id);
+
+        if (!actionItem) {
+            throw new ApiError(404, "Action item not found");
+        }
+
+        res.status(200).json({
+            success: true,
+            message: "Action item deleted successfully",
+        });
+
+    } catch (error) {
+        next(error);
     }
-
-    const actionItem = await ActionItem.findByIdAndDelete(id);
-
-    if (!actionItem) {
-      throw new ApiError(404, "Action item not found");
-    }
-
-    res.status(200).json({
-      success: true,
-      message: "Action item deleted successfully",
-    });
-
-  } catch (error) {
-    next(error);
-  }
 };
 
 
 exports.createActionItem = async (req, res, next) => {
-  try {
-    const { transcriptId, task, owner, dueDate } = req.body;
+    try {
+        const { transcriptId, task, owner, dueDate } = req.body;
 
-    if (!mongoose.Types.ObjectId.isValid(transcriptId)) {
-      throw new ApiError(400, "Invalid transcript ID");
+        if (!mongoose.Types.ObjectId.isValid(transcriptId)) {
+            throw new ApiError(400, "Invalid transcript ID");
+        }
+
+        if (!task || task.trim().length === 0) {
+            throw new ApiError(400, "Task cannot be empty");
+        }
+
+        const newItem = await ActionItem.create({
+            transcriptId,
+            task: task.trim(),
+            owner: owner || null,
+            dueDate: dueDate ? new Date(dueDate) : null,
+        });
+
+        res.status(201).json({
+            success: true,
+            data: newItem,
+        });
+
+    } catch (error) {
+        next(error);
     }
-
-    if (!task || task.trim().length === 0) {
-      throw new ApiError(400, "Task cannot be empty");
-    }
-
-    const newItem = await ActionItem.create({
-      transcriptId,
-      task: task.trim(),
-      owner: owner || null,
-      dueDate: dueDate ? new Date(dueDate) : null,
-    });
-
-    res.status(201).json({
-      success: true,
-      data: newItem,
-    });
-
-  } catch (error) {
-    next(error);
-  }
 };
