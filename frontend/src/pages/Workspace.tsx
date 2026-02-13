@@ -135,13 +135,32 @@ const Workspace = () => {
     setItems((prev) => [newItem, ...prev]);
   };
 
-  const handleToggle = (id) =>
+  const handleToggle = (id:string) =>
     setItems((prev) => prev.map((item) => (item._id === id ? { ...item, status: item.status === "done" ? "open" : "done" } : item)));
 
-  const handleDelete = (id) => setItems((prev) => prev.filter((item) => item._id !== id));
+  const handleDelete = async (id:string) => {
+    try{
+    await axios.delete(`${BACKEND_URL}/actions/${id}`);  
+    setItems((prev) => prev.filter((item) => item._id !== id));
+    }
+    catch(error){
+      console.error("Error deleting item:", error);
+      setError("Failed to delete item. Please try again.");
+    }
+  }
 
-  const handleEdit = (id, changes) =>
-    setItems((prev) => prev.map((item) => (item._id === id ? { ...item, ...changes } : item)));
+  const handleEdit = async(id:string, changes:Partial<Record<string, any>>) =>{
+    console.log("Editing item:", id, changes);
+    try{
+      const response=await axios.patch(`${BACKEND_URL}/actions/${id}`, changes);
+      // console.log("Edit response:", response.data);
+      setItems((prev) => prev.map((item) => (item._id === id ? { ...item, ...changes } : item)));
+    }
+    catch(error){
+      console.error("Error editing item:", error);
+      setError("Failed to edit item. Please try again.");
+    }
+    }
 
   const handleSelectHistory = (entry) => {
 
