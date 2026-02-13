@@ -19,13 +19,14 @@ exports.createTranscript = async (req, res, next) => {
             throw new ApiError(400, "Transcript is too short");
         }
 
-        const transcript = await Transcript.create({
-            text: text.trim(),
-        });
 
-        const extractedItems = await generateActionItemsWithGemini(transcript.text, provider || "gemini");
+        const extractedItems = await generateActionItemsWithGemini(text, provider || "gemini");
 
         console.log("Extracted action items:", extractedItems);
+
+          const transcript = await Transcript.create({
+            text: text.trim(),
+        });
 
         const savedItems = extractedItems.map((item) => ({
             transcriptId: transcript._id,

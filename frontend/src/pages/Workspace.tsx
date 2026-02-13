@@ -1,9 +1,9 @@
 import { useState, useCallback, useEffect } from "react";
-import { Plus, Sparkles, AlertCircle, Inbox } from "lucide-react";
+import { Sparkles, AlertCircle, Inbox } from "lucide-react";
 import HistorySidebar from "@/components/HistorySidebar";
 import ActionItemCard from "@/components/ActionItemCard";
 import axios from "axios";
-import { set } from "date-fns";
+// import { set } from "date-fns";
 
 
 const Workspace = () => {
@@ -118,22 +118,12 @@ const Workspace = () => {
           items: result.actionItems || [],
         };
         setHistory((prev) => [entry, ...prev].slice(0, 5));
+        setSelectedHistoryId(result.transcriptId);
       }
       setLoading(false);
     }, 800);
   }, [transcript]);
 
-  const handleAddManual = () => {
-    const newItem = {
-      id: Date.now(),
-      title: "New action item",
-      owner: null,
-      dueDate: null,
-      tags: [],
-      done: false,
-    };
-    setItems((prev) => [newItem, ...prev]);
-  };
 
   const handleToggle = (id:string) =>
     setItems((prev) => prev.map((item) => (item._id === id ? { ...item, status: item.status === "done" ? "open" : "done" } : item)));
@@ -234,13 +224,6 @@ const Workspace = () => {
                 </button>
               ))}
             </div>
-            <button
-              onClick={handleAddManual}
-              className="flex items-center gap-1.5 rounded-md px-3 py-1.5 text-xs font-medium text-muted-foreground transition-colors hover:bg-accent hover:text-foreground"
-            >
-              <Plus className="h-3.5 w-3.5" />
-              Add Item
-            </button>
           </div>
 
           {/* Action Items */}
