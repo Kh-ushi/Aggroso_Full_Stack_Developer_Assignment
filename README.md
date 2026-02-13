@@ -66,6 +66,8 @@ Backend server
 
 LLM connection
 
+Rate limiting for LLM requests
+
 Database connection
 
 Clean modular architecture (controllers, services, middleware, schemas)
@@ -83,5 +85,3 @@ Pagination for large histories
 Unit tests
 
 Production deployment configuration
-
-Rate limiting
