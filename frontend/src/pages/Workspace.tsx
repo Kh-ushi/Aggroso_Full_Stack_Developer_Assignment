@@ -36,6 +36,7 @@ const Workspace = () => {
   const fetchHistory = async () => {
     try {
       setLoadingHistory(true);
+      setLoadingActionItems(true);
       const response = await axios.get(`${BACKEND_URL}/transcripts`);
       // setHistory(response.data.data);
       const historyData = response.data.data.map((entry) => {
@@ -50,9 +51,11 @@ const Workspace = () => {
       })
       setHistory(historyData);
       setLoadingHistory(false);
+      setLoadingActionItems(false);
     }
     catch (error) {
       setLoadingHistory(false);
+      setLoadingActionItems(false);
       console.error("Error fetching history:", error);
       setError("Failed to load history. Please try again later.");
     }
@@ -61,15 +64,12 @@ const Workspace = () => {
 
   const fetchTranscriptById = async () => {
     try {
-      setLoadingActionItems(true);
       const response = await axios.get(`${BACKEND_URL}/transcripts/${selectedHistoryId}`);
       const entry = response.data.data;
       setTranscript(entry.text);
       setItems(entry.actionItems || []);
-      setLoadingActionItems(false);
     }
     catch (error) {
-      setLoadingActionItems(false);
       console.error("Error fetching transcript by ID:", error);
       setError("Failed to load selected transcript. Please try again later.");
     }
