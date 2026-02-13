@@ -1,5 +1,6 @@
 import { useState, useCallback, useEffect } from "react";
-import { Sparkles, AlertCircle, Inbox } from "lucide-react";
+import { Plus, Sparkles, AlertCircle, Inbox, Menu } from "lucide-react";
+import { Sheet, SheetContent, SheetTrigger, SheetTitle } from "@/components/ui/sheet";
 import HistorySidebar from "@/components/HistorySidebar";
 import ActionItemCard from "@/components/ActionItemCard";
 import axios from "axios";
@@ -181,6 +182,21 @@ const Workspace = () => {
     <div className="flex h-[calc(100vh-3.5rem)]">
       <HistorySidebar history={history} onSelect={handleSelectHistory} selectedId={selectedHistoryId} />
       <main className="flex flex-1 flex-col overflow-y-auto">
+                {/* Mobile history trigger */}
+        <div className="flex items-center border-b border-border px-4 py-2 lg:hidden">
+          <Sheet>
+            <SheetTrigger asChild>
+              <button className="flex items-center gap-2 rounded-md px-2 py-1.5 text-sm text-muted-foreground hover:bg-accent hover:text-foreground transition-colors">
+                <Menu className="h-4 w-4" />
+                Recent Transcripts
+              </button>
+            </SheetTrigger>
+            <SheetContent side="left" className="w-72 p-0 bg-card">
+              <SheetTitle className="sr-only">Recent Transcripts</SheetTitle>
+              <HistorySidebar history={history} onSelect={handleSelectHistory} selectedId={selectedHistoryId} mobile />
+            </SheetContent>
+          </Sheet>
+        </div>
         <div className="mx-auto w-full max-w-3xl p-6">
           {/* Transcript Input */}
           <div className="mb-6">

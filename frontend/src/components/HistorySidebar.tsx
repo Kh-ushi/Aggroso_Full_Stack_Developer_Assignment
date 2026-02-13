@@ -1,8 +1,8 @@
 import { Clock, FileText } from "lucide-react";
 
-const HistorySidebar = ({ history, onSelect, selectedId }) => {
+const HistorySidebar = ({ history, onSelect, selectedId,mobile=false }) => {
   return (
-    <aside className="hidden w-72 shrink-0 border-r border-border bg-card lg:block">
+    <aside className={`${mobile ? "block w-full" : "hidden lg:block w-72"} shrink-0 border-r border-border bg-card`}>
       <div className="flex h-12 items-center gap-2 border-b border-border px-4">
         <Clock className="h-3.5 w-3.5 text-muted-foreground" />
         <span className="text-xs font-medium uppercase tracking-wider text-muted-foreground">
