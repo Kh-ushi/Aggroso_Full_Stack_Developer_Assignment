@@ -1,4 +1,4 @@
-**Where AI Was Used**
+## Where AI Was Used ##
 
 AI tools were used to assist in:
 
@@ -14,7 +14,7 @@ Improving error handling patterns (backend + frontend)
 
 All AI-generated suggestions were reviewed, modified, and integrated manually. The final architecture and production decisions were made intentionally to ensure scalability and correctness.
 
-**AI Tools Used**
+## AI Tools Used ##
 1. Lovable
 
 Used primarily for:
@@ -28,6 +28,8 @@ Tailwind styling refinements
 Component-level design improvements
 
 Lovable helped accelerate visual scaffolding, but logic, state handling, and API integration were manually implemented and refined.
+
+
 
 2. LLM Provider: Google Gemini
 
@@ -45,7 +47,7 @@ Fast response latency
 
 The project uses a provider abstraction layer to allow future expansion to other LLMs (e.g., OpenAI)
 
-**Prompt Engineering Strategy**
+## Prompt Engineering Strategy ##
 
 The system prompt enforces strict rules:
 
@@ -67,7 +69,7 @@ Multiple examples included for consistency
 
 The prompt prioritizes correctness over aggressive extraction.
 
-**LLM Output Safety Measures**
+## LLM Output Safety Measures ##
 
 Raw LLM response is parsed via JSON.parse
 
@@ -77,7 +79,7 @@ Invalid responses are rejected
 
 Errors are handled via centralized middleware
 
-**What Was Built Without AI Assistance**
+## What Was Built Without AI Assistance ##
 
 Express routing
 
@@ -99,7 +101,7 @@ State management logic
 
 Folder architecture decisions
 
-**Limitations**
+## Limitations ##
 
 Relative deadlines may not resolve without explicit current date
 
@@ -109,7 +111,7 @@ No confidence score for extracted tasks
 
 No semantic duplicate detection
 
-**Future Improvements**
+## Future Improvements ##
 Multi-provider LLM support
 
 Retry + fallback parsing strategy
@@ -121,3 +123,4 @@ Fine-tuned prompt optimization
 Deployment-ready logging & monitoring
 
 Authentication layer
+
