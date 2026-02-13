@@ -6,10 +6,7 @@ const statusRoutes = require('./routes/status.routes');
 const transcriptRoutes = require('./routes/transcript.routes');
 const actionRoutes = require('./routes/action.routes');
 
-
 const app = express();
-
-const cors = require("cors");
 
 const corsOptions = {
   origin: "https://mini-workspace.vercel.app",
