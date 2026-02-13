@@ -15,91 +15,90 @@ Improving error handling patterns (backend + frontend)
 All AI-generated suggestions were reviewed, modified, and integrated manually. The final architecture and production decisions were made intentionally to ensure scalability and correctness.
 
 ## AI Tools Used ##
-1. Lovable
+1.` Lovable`
 
-Used primarily for:
+- Used primarily for:
 
-UI prototyping
+- UI prototyping
 
-Rapid frontend layout generation
+- Rapid frontend layout generation
 
-Tailwind styling refinements
+- Tailwind styling refinements
 
-Component-level design improvements
+- Component-level design improvements
 
-Lovable helped accelerate visual scaffolding, but logic, state handling, and API integration were manually implemented and refined.
+- Lovable helped accelerate visual scaffolding, but logic, state handling, and API integration were manually implemented and refined.
 
 
+2. `LLM Provider: Google Gemini`
 
-2. LLM Provider: Google Gemini
+- Purpose: Extract structured action items from transcripts.
 
-Purpose: Extract structured action items from transcripts.
+- Gemini was used because:
 
-Gemini was used because:
+- Strong structured-output capability
 
-Strong structured-output capability
+- Good instruction-following behavior
 
-Good instruction-following behavior
+- Cost-effective for transcript processing
 
-Cost-effective for transcript processing
+- Fast response latency
 
-Fast response latency
-
-The project uses a provider abstraction layer to allow future expansion to other LLMs (e.g., OpenAI)
+- The project uses a provider abstraction layer to allow future expansion to other LLMs (e.g., OpenAI)
 
 ## Prompt Engineering Strategy ##
 
-The system prompt enforces strict rules:
+- The system prompt enforces strict rules:
 
-Output must be valid JSON only
+- Output must be valid JSON only
 
-No markdown or commentary
+- No markdown or commentary
 
-Only explicit task assignments
+- Only explicit task assignments
 
-No inferred owners
+- No inferred owners
 
-No hallucinated due dates
+- No hallucinated due dates
 
-YYYY-MM-DD formatting for dates
+- YYYY-MM-DD formatting for dates
 
-Null for missing owner/dueDate
+- Null for missing owner/dueDate
 
-Multiple examples included for consistency
+- Multiple examples included for consistency
 
-The prompt prioritizes correctness over aggressive extraction.
+- The prompt prioritizes correctness over aggressive extraction.
 
 ## LLM Output Safety Measures ##
 
-Raw LLM response is parsed via JSON.parse
+- Raw LLM response is parsed via JSON.parse
 
-Output is validated using Zod schema
+- Output is validated using Zod schema
 
-Invalid responses are rejected
+- Invalid responses are rejected
 
-Errors are handled via centralized middleware
+- Errors are handled via centralized middleware
 
 ## What Was Built Without AI Assistance ##
 
-Express routing
+- Express routing
 
-Validation middleware
+- Validation middleware
 
-Custom ApiError class
+- Custom ApiError class
 
-Centralized error handling
+- Centralized error handling
 
-LLM provider abstraction
+- LLM provider abstraction
 
-Zod schema validation
+- Zod schema validation
 
-Frontend API error handling
+- Frontend API error handling
 
-Transcript history handling
+- Transcript history handling
 
-State management logic
+- State management logic
 
-Folder architecture decisions
+- Folder architecture decisions
 
 ## Limitations ##
 
