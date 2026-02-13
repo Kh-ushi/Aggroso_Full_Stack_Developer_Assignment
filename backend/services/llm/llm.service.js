@@ -1,5 +1,5 @@
 const ApiError = require("../../utils/ApiError");
-const {generateActionItemsWithGemini}="./gemini.service";
+const {generateActionItemsWithGemini}=require("./gemini.service");
 
 exports.extractActionItems = async (transcriptText, provider = "gemini") => {
   switch (provider) {
