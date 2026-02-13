@@ -13,7 +13,6 @@ const getHealthStatus = async (req, res) => {
     try {
         const llmHealthy = await healthCheck();
         llmStatus = llmHealthy ? "ok" : "error";
-        console.log("LLM health check result:", llmStatus);
     } catch (error) {
         llmStatus = "error";
     }
@@ -21,7 +20,7 @@ const getHealthStatus = async (req, res) => {
     res.status(200).json({
         backend: backendStatus === "ok",
         database: dbStatus === "connected",
-        llm: llmStatus=== "ok",
+        llm: llmStatus === "ok",
     });
 };
 

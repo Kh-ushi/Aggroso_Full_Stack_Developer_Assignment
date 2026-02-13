@@ -1,6 +1,9 @@
 const express = require("express");
 const router = express.Router();
 
+const {actionItemSchema,updateActionItemSchema}=require("../schemas/actionItem.schema");
+const {validate}=require("../middleware/validate");
+
 const {
   getActionItems,
   updateActionItem,
@@ -10,8 +13,8 @@ const {
 } = require("../controllers/action.controller");
 
 router.get("/", getActionItems);
-router.post("/", createActionItem);
-router.patch("/:id", updateActionItem);
+router.post("/", validate(actionItemSchema), createActionItem);
+router.patch("/:id", validate(updateActionItemSchema), updateActionItem);
 router.patch("/:id/status", toggleStatus);
 router.delete("/:id", deleteActionItem);
 

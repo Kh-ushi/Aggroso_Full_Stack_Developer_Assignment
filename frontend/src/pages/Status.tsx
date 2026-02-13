@@ -18,7 +18,6 @@ const Status = () => {
     try{
 
     const response = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/status`);
-    console.log("Status response:", response.data);
     setStatuses(response.data);
     setChecking(false);
   }

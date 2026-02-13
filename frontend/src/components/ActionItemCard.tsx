@@ -140,7 +140,7 @@ const ActionItemCard = ({ item, onToggle, onDelete, onEdit }) => {
 
         {/* Edit / Delete Buttons */}
         {!editing && (
-          <div className="flex shrink-0 gap-1 opacity-0 transition-opacity group-hover:opacity-100">
+          <div className="flex shrink-0 gap-1 transition-opacity opacity-100">
             {item.status !== "done" && (
               <button
                 onClick={() => {
@@ -159,10 +159,11 @@ const ActionItemCard = ({ item, onToggle, onDelete, onEdit }) => {
 
             <button
               onClick={() => onDelete(item._id)}
-              className="rounded-md p-1.5 text-muted-foreground transition-colors hover:bg-destructive/10 hover:text-destructive"
+              className="rounded-md p-1.5 bg-destructive/10 text-destructive"
             >
               <Trash2 className="h-3.5 w-3.5" />
             </button>
+
           </div>
         )}
       </div>

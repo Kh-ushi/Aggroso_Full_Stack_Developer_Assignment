@@ -14,7 +14,6 @@ exports.getActionItems = async (req, res, next) => {
 
 exports.updateActionItem = async (req, res, next) => {
     try {
-
         const { id } = req.params;
 
         if (!mongoose.Types.ObjectId.isValid(id)) {

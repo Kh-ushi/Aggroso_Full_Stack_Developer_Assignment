@@ -77,7 +77,6 @@ exports.generateActionItemsWithGemini = async (transcriptText) => {
     }
     catch (error) {
         if (error instanceof ApiError) throw error;
-
         console.error("Gemini extraction error:", error.message);
         throw new ApiError(500, "Failed to extract action items using Gemini");
     }

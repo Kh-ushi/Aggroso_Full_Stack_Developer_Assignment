@@ -8,7 +8,6 @@ const generateActionItemsWithGemini = require("../services/llm/gemini.service").
 
 exports.createTranscript = async (req, res, next) => {
     try {
-        console.log("Received transcript creation request with body:", req.body);
         const { text, provider } = req.body;
 
         if (!text || typeof text !== "string" || text.trim().length === 0) {
@@ -22,9 +21,7 @@ exports.createTranscript = async (req, res, next) => {
 
         const extractedItems = await generateActionItemsWithGemini(text, provider || "gemini");
 
-        console.log("Extracted action items:", extractedItems);
-
-          const transcript = await Transcript.create({
+        const transcript = await Transcript.create({
             text: text.trim(),
         });
 
@@ -55,7 +52,7 @@ exports.getTranscript = async (req, res, next) => {
         if (limit <= 0) {
             throw new ApiError(400, "Limit must be a positive integer");
         }
-        
+
 
         const transcripts = await Transcript.find()
             .sort({ createdAt: -1 })

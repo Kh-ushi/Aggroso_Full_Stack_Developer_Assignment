@@ -21,7 +21,6 @@ const Workspace = () => {
   const fetchActionItems = async () => {
     try {
       const response = await axios.get(`${BACKEND_URL}/actions`);
-      console.log("Fetched action items:", response.data.data);
       setItems(response.data.data);
     }
     catch (error) {
@@ -57,7 +56,6 @@ const Workspace = () => {
   const fetchTranscriptById = async () => {
     try {
       const response = await axios.get(`${BACKEND_URL}/transcripts/${selectedHistoryId}`);
-      // console.log("Fetched transcript by ID:", response.data.data);
       const entry = response.data.data;
       setTranscript(entry.text);
       setItems(entry.actionItems || []);
@@ -90,9 +88,17 @@ const Workspace = () => {
       const response = await axios.post(`${BACKEND_URL}/transcripts`, { text: transcript });
       return response.data.data;
     }
-    catch (error) {
-      console.error("Error generating action items:", error);
-      setError(error.response.data?.error || error.response.data?.message || "server_error")
+    catch (err:any) {
+
+
+    const message =
+      err?.response?.data?.message ||
+      err?.response?.data?.error ||
+      err?.message ||
+      "Server error";
+
+    setError(message);
+    setLoading(false);
     }
   }
 
@@ -108,7 +114,7 @@ const Workspace = () => {
       if (result.error === "no_items") {
         setError("No action items could be extracted. Try a longer transcript.");
         setItems([]);
-      } else if (result.actionItems) {
+      } else if (result.actionItems && result.actionItems.length > 0) {
         setItems(result.actionItems);
         const entry = {
           id: result.transcriptId,
@@ -141,10 +147,8 @@ const Workspace = () => {
   }
 
   const handleEdit = async(id:string, changes:Partial<Record<string, any>>) =>{
-    console.log("Editing item:", id, changes);
     try{
       const response=await axios.patch(`${BACKEND_URL}/actions/${id}`, changes);
-      // console.log("Edit response:", response.data);
       setItems((prev) => prev.map((item) => (item._id === id ? { ...item, ...changes } : item)));
     }
     catch(error){
@@ -162,7 +166,6 @@ const Workspace = () => {
       return;
     }
 
-    console.log("Selected history entry:", entry);
     setSelectedHistoryId(entry.id);
     setTranscript(entry.transcript);
     setItems(entry.actionItems || []);
