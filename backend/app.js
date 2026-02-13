@@ -9,12 +9,15 @@ const actionRoutes = require('./routes/action.routes');
 
 const app = express();
 
-app.use(cors({
-  origin: "https://mini-workspace.vercel.app",
-  credentials: true
-}));
+const cors = require("cors");
 
-app.options("*", cors());
+const corsOptions = {
+  origin: "https://mini-workspace.vercel.app",
+  credentials: true,
+};
+
+app.use(cors(corsOptions));
+app.options(/.*/, cors(corsOptions));
 
 app.use(express.json());
 
