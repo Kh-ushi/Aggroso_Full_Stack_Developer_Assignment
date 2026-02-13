@@ -4,6 +4,7 @@ import { Sheet, SheetContent, SheetTrigger, SheetTitle } from "@/components/ui/s
 import HistorySidebar from "@/components/HistorySidebar";
 import ActionItemCard from "@/components/ActionItemCard";
 import axios from "axios";
+import { set } from "date-fns";
 // import { set } from "date-fns";
 
 
@@ -15,6 +16,8 @@ const Workspace = () => {
   const [loading, setLoading] = useState(false);
   const [history, setHistory] = useState([]);
   const [selectedHistoryId, setSelectedHistoryId] = useState(null);
+  const [loadingHistory, setLoadingHistory] = useState(false);
+  const [loadingActionItems, setLoadingActionItems] = useState(false);
 
   const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
 
@@ -32,6 +35,7 @@ const Workspace = () => {
 
   const fetchHistory = async () => {
     try {
+      setLoadingHistory(true);
       const response = await axios.get(`${BACKEND_URL}/transcripts`);
       // setHistory(response.data.data);
       const historyData = response.data.data.map((entry) => {
@@ -45,8 +49,10 @@ const Workspace = () => {
         }
       })
       setHistory(historyData);
+      setLoadingHistory(false);
     }
     catch (error) {
+      setLoadingHistory(false);
       console.error("Error fetching history:", error);
       setError("Failed to load history. Please try again later.");
     }
@@ -55,12 +61,15 @@ const Workspace = () => {
 
   const fetchTranscriptById = async () => {
     try {
+      setLoadingActionItems(true);
       const response = await axios.get(`${BACKEND_URL}/transcripts/${selectedHistoryId}`);
       const entry = response.data.data;
       setTranscript(entry.text);
       setItems(entry.actionItems || []);
+      setLoadingActionItems(false);
     }
     catch (error) {
+      setLoadingActionItems(false);
       console.error("Error fetching transcript by ID:", error);
       setError("Failed to load selected transcript. Please try again later.");
     }
@@ -183,7 +192,7 @@ const Workspace = () => {
 
   return (
     <div className="flex h-[calc(100vh-3.5rem)]">
-      <HistorySidebar history={history} onSelect={handleSelectHistory} selectedId={selectedHistoryId} />
+      <HistorySidebar history={history} onSelect={handleSelectHistory} selectedId={selectedHistoryId} loadingHistory={loadingHistory} />
       <main className="flex flex-1 flex-col overflow-y-auto">
                 {/* Mobile history trigger */}
         <div className="flex items-center border-b border-border px-4 py-2 lg:hidden">
@@ -246,7 +255,13 @@ const Workspace = () => {
           </div>
 
           {/* Action Items */}
-          <div className="flex flex-col gap-3 max-h-[45vh] overflow-y-auto">
+         {loadingActionItems ? (
+          <div className="flex flex-col items-center justify-center p-6">
+            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+            <p className="mt-2 text-sm text-muted-foreground">Loading action items...</p>
+          </div>
+         ):(
+           <div className="flex flex-col gap-3 max-h-[45vh] overflow-y-auto">
             {filtered.length === 0 && (
               <div className="flex flex-col items-center gap-3 rounded-lg border border-dashed border-border py-16 text-center animate-fade-in">
                 <Inbox className="h-10 w-10 text-muted-foreground/30" />
@@ -267,6 +282,7 @@ const Workspace = () => {
               />
             ))}
           </div>
+         )}
         </div>
       </main>
     </div>

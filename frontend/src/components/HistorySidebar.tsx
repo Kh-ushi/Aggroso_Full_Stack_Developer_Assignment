@@ -1,6 +1,6 @@
 import { Clock, FileText } from "lucide-react";
 
-const HistorySidebar = ({ history, onSelect, selectedId,mobile=false }) => {
+const HistorySidebar = ({ history, onSelect, selectedId,mobile=false,loadingHistory=false}) => {
   return (
     <aside className={`${mobile ? "block w-full" : "hidden lg:block w-72"} shrink-0 border-r border-border bg-card`}>
       <div className="flex h-12 items-center gap-2 border-b border-border px-4">
@@ -9,7 +9,15 @@ const HistorySidebar = ({ history, onSelect, selectedId,mobile=false }) => {
           Recent Transcripts
         </span>
       </div>
-      <div className="flex flex-col gap-1 p-2">
+      {loadingHistory ? (
+        <div>
+          <div className="flex animate-pulse items-center gap-2 px-4 py-3">
+            <div className="h-3 w-3 rounded-full bg-muted-foreground/50" />
+            <div className="h-3 w-24 rounded-full bg-muted-foreground/50" />
+          </div>
+        </div>
+      ):(
+        <div className="flex flex-col gap-1 p-2">
         <button
           onClick={() => onSelect(null)}
           className={`group flex flex-col gap-1 rounded-lg px-3 py-2.5 text-left transition-colors ${
@@ -48,6 +56,7 @@ const HistorySidebar = ({ history, onSelect, selectedId,mobile=false }) => {
           ))
         )}
       </div>
+      )}
     </aside>
   );
 };
