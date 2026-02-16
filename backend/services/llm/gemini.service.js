@@ -3,11 +3,6 @@ const ApiError = require("../../utils/ApiError");
 const { SYSTEM_PROMPT } = require("./prompts");
 
 
-if (!process.env.GEMINI_API_KEY) {
-    throw new Error("GEMINI_API_KEY is not defined in environment variables");
-}
-
-
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
 
 const model = genAI.getGenerativeModel({
@@ -15,6 +10,11 @@ const model = genAI.getGenerativeModel({
 });
 
 exports.generateActionItemsWithGemini = async (transcriptText) => {
+
+    if (!process.env.GEMINI_API_KEY) {
+        throw new Error("GEMINI_API_KEY is not defined in environment variables");
+    }
+    
     try {
         if (!transcriptText || typeof transcriptText !== "string") {
             throw new ApiError(400, "Transcript text must be a valid string");

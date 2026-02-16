@@ -48,11 +48,13 @@ exports.createTranscript = async (req, res, next) => {
 
 exports.getTranscript = async (req, res, next) => {
     try {
-        const limit = parseInt(req.query.limit) || 5;
-        if (limit <= 0) {
+        const limit = req.query.limit !== undefined
+            ? parseInt(req.query.limit)
+            : 5;
+
+        if (isNaN(limit) || limit <= 0) {
             throw new ApiError(400, "Limit must be a positive integer");
         }
-
 
         const transcripts = await Transcript.find()
             .sort({ createdAt: -1 })
