@@ -2,6 +2,7 @@ const { GoogleGenerativeAI } = require("@google/generative-ai");
 const ApiError = require("../../utils/ApiError");
 const { SYSTEM_PROMPT } = require("./prompts");
 
+const logger = require("../../utils/logger");
 
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
 
@@ -14,7 +15,7 @@ exports.generateActionItemsWithGemini = async (transcriptText) => {
     if (!process.env.GEMINI_API_KEY) {
         throw new Error("GEMINI_API_KEY is not defined in environment variables");
     }
-    
+
     try {
         if (!transcriptText || typeof transcriptText !== "string") {
             throw new ApiError(400, "Transcript text must be a valid string");
@@ -52,7 +53,7 @@ exports.generateActionItemsWithGemini = async (transcriptText) => {
         try {
             parsed = JSON.parse(rawText);
         } catch (err) {
-            console.error("Gemini raw response:", rawText);
+            logger.error({rawText}, "Gemini raw response");
             throw new ApiError(500, "Gemini returned invalid JSON");
         }
 
@@ -77,7 +78,7 @@ exports.generateActionItemsWithGemini = async (transcriptText) => {
     }
     catch (error) {
         if (error instanceof ApiError) throw error;
-        console.error("Gemini extraction error:", error.message);
+        logger.error({ error: error.message }, "Gemini extraction error");
         throw new ApiError(500, "Failed to extract action items using Gemini");
     }
 };
@@ -103,7 +104,7 @@ exports.healthCheck = async () => {
         return text.length > 0;
     }
     catch (error) {
-        console.error("Gemini health check failed:", error.message);
+        logger.error({ error: error.message }, "Gemini health check error");
         return false;
     }
 }
